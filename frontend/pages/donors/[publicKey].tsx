@@ -12,7 +12,7 @@ import { fetchProfile, fetchDonorHistoryPage } from "@/lib/api";
 import { connectWallet, signTransactionWithWallet, getConnectedPublicKey } from "@/lib/wallet";
 import { CONTRACT_ID, buildMintImpactNftTransaction, submitSorobanTransaction, explorerUrl } from "@/lib/stellar";
 import type { DonorProfile, Donation, BadgeTier } from "@/utils/types";
-import { formatXLM } from "@/utils/format";
+import { formatAmount, formatDate as formatLocalizedDate, formatXLM } from "@/utils/format";
 
 // ── Badge helpers ─────────────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ function shortenKey(pk: string): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
+  return formatLocalizedDate(iso, undefined, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -119,7 +119,7 @@ function DonationRow({ donation }: { donation: Donation }) {
       </div>
       <div className="flex flex-col items-end gap-0.5 shrink-0">
         <span className="font-semibold text-[#227239] font-body text-sm">
-          {currency === "XLM" ? formatXLM(amount) : `${parseFloat(amount).toFixed(2)} ${currency}`}
+          {currency === "XLM" ? formatXLM(amount) : `${formatAmount(parseFloat(amount))} ${currency}`}
         </span>
         <span className="text-[10px] text-[var(--text-secondary)] dark:text-[#8aaa8a]">
           {formatDate(donation.createdAt)}
@@ -156,7 +156,7 @@ function ProfileNotFound({ publicKey }: { publicKey: string }) {
 
 function ProfileSkeleton() {
   return (
-    <div className="animate-pulse space-y-6 max-w-2xl mx-auto px-4 py-10">
+    <div className="animate-pulse motion-reduce:animate-none space-y-6 max-w-2xl mx-auto px-4 py-10">
       <div className="flex items-center gap-4">
         <div className="w-16 h-16 rounded-full bg-[#c8dfc8]" />
         <div className="space-y-2 flex-1">
@@ -373,7 +373,7 @@ function ClaimNftCard({ profile }: { profile: DonorProfile }) {
             <p className="text-xs text-[var(--text-secondary)] font-body">
               Minted at ledger{" "}
               <span className="font-semibold text-[#227239]">
-                #{minted.ledger.toLocaleString()}
+                #{formatAmount(minted.ledger, 0)}
               </span>
             </p>
             <a

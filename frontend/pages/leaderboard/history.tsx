@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { formatAmount, formatDate } from "@/utils/format";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
@@ -37,7 +38,7 @@ const BADGE_ICONS: Record<string, string> = {
 const RANK_MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 
 function monthLabel(ym: string) {
-  return new Date(ym + '-01').toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  return formatDate(`${ym}-01`, undefined, { month: "long", year: "numeric" });
 }
 
 /**
@@ -99,7 +100,7 @@ export default function LeaderboardHistoryPage() {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 animate-fade-in">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 animate-fade-in motion-reduce:animate-none">
       <div className="text-center mb-10">
         <div className="text-5xl mb-4">🏅</div>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-forest-900 mb-3">
@@ -145,7 +146,7 @@ export default function LeaderboardHistoryPage() {
                     />
                     <YAxis tick={{ fontSize: 12 }} label={{ value: "XLM", angle: -90, position: "insideLeft" }} />
                     <Tooltip 
-                      formatter={(value: any) => [`${Number(value || 0).toFixed(2)} XLM`, "Donated"]}
+                      formatter={(value: any) => [`${formatAmount(Number(value || 0))} XLM`, "Donated"]}
                       contentStyle={{ backgroundColor: "#f0fdf4", border: "1px solid #227239", borderRadius: "8px" }}
                     />
                     <Line 
@@ -210,7 +211,7 @@ export default function LeaderboardHistoryPage() {
                               </span>
                             )}
                             <span className="font-bold text-forest-900 text-sm">
-                              {parseFloat(entry.totalXLMThatMonth).toFixed(2)} XLM
+                              {formatAmount(parseFloat(entry.totalXLMThatMonth))} XLM
                             </span>
                           </div>
                         </div>

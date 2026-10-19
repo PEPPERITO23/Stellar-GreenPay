@@ -3,7 +3,7 @@
  * Vertical timeline of merged pull requests, celebrating who shipped what.
  */
 import type { ContributorPR } from "@/utils/types";
-import { timeAgo } from "@/utils/format";
+import { formatDate, timeAgo } from "@/utils/format";
 
 interface ContributorTimelineProps {
   pullRequests: ContributorPR[];
@@ -31,7 +31,7 @@ export default function ContributorTimeline({
   );
 
   return (
-    <div className="card animate-fade-in">
+    <div className="card animate-fade-in motion-reduce:animate-none">
       <div className="relative">
         <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-forest-200" />
 
@@ -91,7 +91,7 @@ export default function ContributorTimeline({
 
                   <div className="flex items-center gap-3 mt-2 text-xs text-[var(--text-tertiary)] dark:text-forest-300 font-body">
                     <span title={timeAgo(pr.mergedAt)}>
-                      🎉 Merged {new Date(pr.mergedAt).toLocaleDateString()}
+                      🎉 Merged {formatDate(pr.mergedAt)}
                     </span>
                   </div>
                 </div>

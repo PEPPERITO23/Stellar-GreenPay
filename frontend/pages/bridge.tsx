@@ -16,7 +16,7 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { getAddress as getPublicKey } from "@stellar/freighter-api";
-import { shortenAddress } from "@/utils/format";
+import { formatDateTime, shortenAddress } from "@/utils/format";
 import { fetchProjects, recordDonation } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
 import type { ClimateProject } from "@/utils/types";
@@ -86,8 +86,9 @@ export default function BridgePage() {
       const address = typeof pk === "string" ? pk : (pk as { address?: string } | null)?.address ?? null;
       setStellarAddress(address);
       if (address) setNotice(null);
-    } catch (err) {
-      console.log("Wallet not connected");
+    } catch {
+      // A disconnected wallet is an expected state on this page.
+      setStellarAddress(null);
     }
   };
 
@@ -449,7 +450,7 @@ export default function BridgePage() {
             <button
               onClick={openCircleBridge}
               disabled={!stellarAddress}
-              className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-forest-500 text-white rounded-xl font-bold text-lg hover:from-blue-600 hover:to-forest-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-forest-500 text-white rounded-xl font-bold text-lg hover:from-blue-600 hover:to-forest-600 transition-all motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {t("bridge.openBridge")}
             </button>
@@ -532,7 +533,7 @@ export default function BridgePage() {
                         {t("bridge.historyRoute").replace("{source}", entry.sourceChain)}
                       </p>
                       <p className="text-xs text-[var(--text-secondary)] dark:text-[#8aaa8a]">
-                        {new Date(entry.timestamp).toLocaleString()}
+                        {formatDateTime(entry.timestamp)}
                       </p>
                     </div>
                     <div className="text-right">

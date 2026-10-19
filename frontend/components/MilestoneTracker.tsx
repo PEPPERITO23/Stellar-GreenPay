@@ -4,6 +4,7 @@
  */
 import { useState } from "react";
 import clsx from "clsx";
+import { formatDate } from "@/utils/format";
 
 export interface Milestone {
   id: string;
@@ -69,7 +70,7 @@ export default function MilestoneTracker({
   }
 
   return (
-    <div className="card animate-fade-in">
+    <div className="card animate-fade-in motion-reduce:animate-none">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="font-display text-lg font-semibold text-forest-900">
@@ -83,7 +84,7 @@ export default function MilestoneTracker({
           <div className="text-2xl font-bold text-forest-700">{progress}%</div>
           <div className="w-24 h-2 bg-forest-100 rounded-full mt-1">
             <div
-              className="h-full bg-forest-500 rounded-full transition-all"
+              className="h-full bg-forest-500 rounded-full transition-all motion-reduce:transition-none"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -171,11 +172,11 @@ export default function MilestoneTracker({
 
                   <div className="flex items-center gap-3 mt-2 text-xs text-[var(--text-tertiary)] dark:text-forest-300 font-body">
                     <span>
-                      📅 Target: {new Date(milestone.targetDate).toLocaleDateString()}
+                      📅 Target: {formatDate(milestone.targetDate)}
                     </span>
                     {isCompleted && milestone.completedAt && (
                       <span className="text-forest-500">
-                        ✅ Completed: {new Date(milestone.completedAt).toLocaleDateString()}
+                        ✅ Completed: {formatDate(milestone.completedAt)}
                       </span>
                     )}
                   </div>
